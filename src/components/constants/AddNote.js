@@ -73,7 +73,7 @@ export default class AddFolder extends React.Component {
       <div>
         <h2>Add Note</h2>
         <form onSubmit={(e) => 
-          handleNewNoteSubmit(e, this.state.name.value, this.state.description.value, this.state.folderName.value, this.props.history)} >
+          handleNewNoteSubmit(e, this.state.name.value, this.state.content.value, this.state.folderName.value, this.props.history)}>
           <label htmlFor="noteName">Note Name</label>
           <input type="text" onChange={e => this.updateNoteName(e.target.value)} name="noteName" />
           {this.state.name.touched && <ValidationError message={nameError} />}
