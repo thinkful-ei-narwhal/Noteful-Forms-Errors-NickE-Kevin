@@ -8,7 +8,8 @@ import Header from './components/constants/Header';
 import Sidebar from './components/constants/Sidebar';
 import Context from './components/constants/userContext';
 import AddFolder from './components/constants/AddFolder';
-import AddNote from './components/constants/AddNote'
+import AddNote from './components/constants/AddNote';
+import ErrorPage from './components/constants/ErrorPage';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -107,7 +108,7 @@ export default class App extends React.Component {
 
   handleNewNoteSubmit = (event, newNoteName, newNoteContent, newNoteFolder, history) => {
     event.preventDefault();
-    console.log('test');
+    throw new Error("Failed to load");
     const modified = Date.now();
     const newFolderId = this.findFolderId(newNoteFolder);
     fetch(`http://localhost:9090/notes`,
@@ -134,7 +135,7 @@ export default class App extends React.Component {
       })
       .then(response => {
         const newNote = [...this.state.notes, {
-          id: response,
+          id: response.id,
           name: newNoteName,
           modified: modified,
           folderId: newFolderId,
@@ -157,34 +158,38 @@ export default class App extends React.Component {
       }}>
 
         <div className="App">
-          <Header />
+          <ErrorPage>
+            <Header />
+          </ErrorPage>
           <div className="flex-divide">
-            <Sidebar state={this.state} />
-            <Switch>
-              <Route
-                exact path='/'
-                component={Main}
-              />
-              <Route
-                exact path='/folders/:id'
-                component={FolderList}
-              />
+            <ErrorPage>
+              <Sidebar state={this.state} />
+              <Switch>
+                <Route
+                  exact path='/'
+                  component={Main}
+                />
+                <Route
+                  exact path='/folders/:id'
+                  component={FolderList}
+                />
 
-              <Route
-                exact path='/note/:id'
-                component={ExpandedNote}
-              />
+                <Route
+                  exact path='/note/:id'
+                  component={ExpandedNote}
+                />
 
-              <Route
-                exact path='/AddFolder'
-                component={AddFolder}
-              />
+                <Route
+                  exact path='/AddFolder'
+                  component={AddFolder}
+                />
 
-              <Route
-                exact path='/AddNote'
-                component={AddNote}
-              />
-            </Switch>
+                <Route
+                  exact path='/AddNote'
+                  component={AddNote}
+                />
+              </Switch>
+            </ErrorPage>
           </div>
         </div>
 

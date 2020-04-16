@@ -31,7 +31,7 @@ export default class AddFolder extends React.Component {
   }
 
   updateNoteFolder = (value) => {
-    this.setState({ folderName: { value: value, touched: true} });
+    this.setState({ folderName: { value: value, touched: true } });
   }
 
   validateNoteName() {
@@ -51,7 +51,7 @@ export default class AddFolder extends React.Component {
       return 'Content must be at least 3 characters long';
     }
   }
-  
+
   validateNoteFolder() {
     const { folders } = this.context;
     const folderName = this.state.folderName.value.trim();
