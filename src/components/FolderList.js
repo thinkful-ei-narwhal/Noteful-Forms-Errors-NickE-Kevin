@@ -1,6 +1,7 @@
 import React from 'react';
 import Note from './Note';
 import Context from './constants/userContext'
+import { Link } from 'react-router-dom';
 
 export default class FolderList extends React.Component {
   static contextType = Context;
@@ -27,6 +28,9 @@ export default class FolderList extends React.Component {
     return (
       <div className="main">
         {displayNotes}
+        <Link to={'/AddNote'}>
+          <button type='button'>Add Note</button>
+        </Link>
       </div>
     )
   }

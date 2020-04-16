@@ -8,6 +8,7 @@ import Header from './components/constants/Header';
 import Sidebar from './components/constants/Sidebar';
 import Context from './components/constants/userContext';
 import AddFolder from './components/constants/AddFolder';
+import AddNote from './components/constants/AddNote'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -99,13 +100,60 @@ export default class App extends React.Component {
       .catch(err => console.log(err.message));
   }
 
+  findFolderId = (folderName) => {
+    const foundFolder = this.state.folders.find(folder => folder.name === folderName);
+    return foundFolder.id;
+  }
+
+  handleNewNoteSubmit = (event, newNoteName, newNoteContent, newNoteFolder, history) => {
+    event.preventDefault();
+    console.log('test');
+    const modified = Date.now();
+    const newFolderId = this.findFolderId(newNoteFolder);
+    fetch(`http://localhost:9090/notes`,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "name": newNoteName,
+          "modified": modified,
+          "folderId": newFolderId,
+          "content": newNoteContent,
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        else {
+          throw Error();
+        }
+      })
+      .then(response => {
+        const newNote = [...this.state.notes, {
+          id: response,
+          name: newNoteName,
+          modified: modified,
+          folderId: newFolderId,
+          content: newNoteContent,
+        }];
+        this.setState({ notes: newNote });
+        history.push('/');
+      })
+      .catch(err => console.log(err.message));
+  }
+
   render() {
     return (
       <Context.Provider value={{
         folders: this.state.folders,
         notes: this.state.notes,
         handleDelete: this.handleDelete,
-        handleNewFolderSubmit: this.handleNewFolderSubmit
+        handleNewFolderSubmit: this.handleNewFolderSubmit,
+        handleNewNoteSubmit: this.handleNewNoteSubmit,
       }}>
 
         <div className="App">
@@ -132,10 +180,10 @@ export default class App extends React.Component {
                 component={AddFolder}
               />
 
-              {/* <Route
+              <Route
                 exact path='/AddNote'
                 component={AddNote}
-              /> */}
+              />
             </Switch>
           </div>
         </div>
