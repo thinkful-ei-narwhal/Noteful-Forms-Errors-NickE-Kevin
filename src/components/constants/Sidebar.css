@@ -1,0 +1,28 @@
+.sidebar {
+  float: left;
+  width: 30%;
+  border: 1px solid black;
+}
+
+.folder-list {
+  list-style: none;
+}
+
+.folder-list {
+  padding: 20px;
+  border: 1px solid black;
+}
+
+.nav-item a {
+  text-decoration: none;
+  display: block;
+  border: 1px solid black;
+  padding: 10px;
+  font-size: 1.5em;
+  color: black;
+}
+
+.nav-item a.selected {
+  background-color: black;
+  color: white;
+}
