@@ -60,12 +60,12 @@ export default class AddFolder extends React.Component {
     } else if (folderName.length < 3) {
       return 'Folder name must be at least 3 characters long';
     } else if ((folders.find(folder => folder.name === folderName)) === undefined) {
-      return 'Folder name must reference and actual folder'
+      return 'Folder name must reference an actual folder'
     }
   }
 
   render() {
-    const { handleNewNoteSubmit } = this.context;
+    const { handleNewNoteSubmit, folders } = this.context;
     const nameError = this.validateNoteName();
     const contError = this.validateNoteCont();
     const folderError = this.validateNoteFolder();
@@ -73,20 +73,22 @@ export default class AddFolder extends React.Component {
       return (
         <div>
           <h2>Add Note</h2>
-          <form onSubmit={(e) => 
+          <form onSubmit={(e) =>
             handleNewNoteSubmit(e, this.state.name.value, this.state.content.value, this.state.folderName.value, this.props.history)}>
             <label htmlFor="noteName">Note Name</label>
             <input type="text" onChange={e => this.updateNoteName(e.target.value)} name="noteName" />
             {this.state.name.touched && <ValidationError message={nameError} />}
-  
+
             <label htmlFor="noteFolder">Folder Name</label>
-            <input type="text" onChange={e => this.updateNoteFolder(e.target.value)} name="noteFolder" />
+            <select name="noteFolder" onChange={e => this.updateNoteFolder(e.target.value)} >
+              {folders.map(folder => <option value={`${folder.name}`}>{`${folder.name}`}</option>)}
+            </select>
             {this.state.folderName.touched && <ValidationError message={folderError} />}
-  
+
             <label htmlFor="noteContent">Note Content</label>
             <input type="text" onChange={e => this.updateNoteCont(e.target.value)} name="noteContent" />
             {this.state.content.touched && <ValidationError message={contError} />}
-  
+
             <button type='submit' disabled={this.validateNoteName() || this.validateNoteCont()}>Add Note</button>
           </form>
         </div>
@@ -96,5 +98,4 @@ export default class AddFolder extends React.Component {
       throw new Error('Failed to add note');
     }
   }
-
 }
