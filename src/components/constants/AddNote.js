@@ -69,27 +69,32 @@ export default class AddFolder extends React.Component {
     const nameError = this.validateNoteName();
     const contError = this.validateNoteCont();
     const folderError = this.validateNoteFolder();
-    return (
-      <div>
-        <h2>Add Note</h2>
-        <form onSubmit={(e) => 
-          handleNewNoteSubmit(e, this.state.name.value, this.state.content.value, this.state.folderName.value, this.props.history)}>
-          <label htmlFor="noteName">Note Name</label>
-          <input type="text" onChange={e => this.updateNoteName(e.target.value)} name="noteName" />
-          {this.state.name.touched && <ValidationError message={nameError} />}
-
-          <label htmlFor="noteFolder">Folder Name</label>
-          <input type="text" onChange={e => this.updateNoteFolder(e.target.value)} name="noteFolder" />
-          {this.state.folderName.touched && <ValidationError message={folderError} />}
-
-          <label htmlFor="noteContent">Note Content</label>
-          <input type="text" onChange={e => this.updateNoteCont(e.target.value)} name="noteContent" />
-          {this.state.content.touched && <ValidationError message={contError} />}
-
-          <button type='submit' disabled={this.validateNoteName() || this.validateNoteCont()}>Add Note</button>
-        </form>
-      </div>
-    );
+    try {
+      return (
+        <div>
+          <h2>Add Note</h2>
+          <form onSubmit={(e) => 
+            handleNewNoteSubmit(e, this.state.name.value, this.state.content.value, this.state.folderName.value, this.props.history)}>
+            <label htmlFor="noteName">Note Name</label>
+            <input type="text" onChange={e => this.updateNoteName(e.target.value)} name="noteName" />
+            {this.state.name.touched && <ValidationError message={nameError} />}
+  
+            <label htmlFor="noteFolder">Folder Name</label>
+            <input type="text" onChange={e => this.updateNoteFolder(e.target.value)} name="noteFolder" />
+            {this.state.folderName.touched && <ValidationError message={folderError} />}
+  
+            <label htmlFor="noteContent">Note Content</label>
+            <input type="text" onChange={e => this.updateNoteCont(e.target.value)} name="noteContent" />
+            {this.state.content.touched && <ValidationError message={contError} />}
+  
+            <button type='submit' disabled={this.validateNoteName() || this.validateNoteCont()}>Add Note</button>
+          </form>
+        </div>
+      );
+    }
+    catch {
+      throw new Error('Failed to add note');
+    }
   }
 
 }

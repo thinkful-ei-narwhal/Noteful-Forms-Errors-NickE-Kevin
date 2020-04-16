@@ -108,7 +108,6 @@ export default class App extends React.Component {
 
   handleNewNoteSubmit = (event, newNoteName, newNoteContent, newNoteFolder, history) => {
     event.preventDefault();
-    throw new Error("Failed to load");
     const modified = Date.now();
     const newFolderId = this.findFolderId(newNoteFolder);
     fetch(`http://localhost:9090/notes`,
