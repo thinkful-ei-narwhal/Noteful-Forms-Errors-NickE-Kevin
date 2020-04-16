@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Context from './constants/userContext';
 export default class Note extends React.Component {
   static contextType = Context;
-  
+
   render() {
     const { handleDelete } = this.context;
     const date = new Date(this.props.modified);
@@ -20,7 +20,7 @@ export default class Note extends React.Component {
           <Link to={`/note/${this.props.id}`}>Expand Me</Link>
           <p>{dateInHuman}</p>
         </div>
-        <button onClick={(e) => handleDelete(this.props.id)}>Delete me!</button>
+        <button onClick={(e) => handleDelete(this.props.id, this.props.history)}>Delete me!</button>
       </div>
     )
   }

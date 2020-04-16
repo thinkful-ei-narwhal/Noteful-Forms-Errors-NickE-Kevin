@@ -19,9 +19,9 @@ export default class FolderList extends React.Component {
         key={note.id}
         id={note.id}
         title={note.name}
-        modified={note.modified} 
+        modified={note.modified}
         history={this.props.history}
-        />
+      />
     ))
 
     return (

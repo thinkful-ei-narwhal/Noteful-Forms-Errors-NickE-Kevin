@@ -18,7 +18,7 @@ export default class Sidebar extends React.Component {
         <nav>
           {folderLinks}
         </nav>
-        <button>Add Folder</button>
+        <NavLink to={'/AddFolder'}><button>Add Folder</button></NavLink>
       </div>
 
     )

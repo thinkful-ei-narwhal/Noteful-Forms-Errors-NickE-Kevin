@@ -7,6 +7,7 @@ import ExpandedNote from './components/ExpandedNote';
 import Header from './components/constants/Header';
 import Sidebar from './components/constants/Sidebar';
 import Context from './components/constants/userContext';
+import AddFolder from './components/constants/AddFolder';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -46,7 +47,7 @@ export default class App extends React.Component {
       .catch(err => console.log(err.message));
   }
 
-  handleDelete = (noteId) => {
+  handleDelete = (noteId, history) => {
     fetch(`http://localhost:9090/notes/${noteId}`, {
       method: 'DELETE',
       headers: {
@@ -65,18 +66,46 @@ export default class App extends React.Component {
         this.setState({
           notes: this.state.notes.filter(note => note.id !== noteId)
         })
-        this.props.history.push('/');
+        history.push('/');
+      })
+      .catch(err => console.log(err.message));
+  }
+
+
+  handleNewFolderSubmit = (event, newFolderName, history) => {
+    event.preventDefault();
+    fetch(`http://localhost:9090/folders`,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "name": newFolderName })
+      })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        else {
+          throw Error();
+        }
+      })
+      .then(response => {
+        const newFolder = [...this.state.folders, { id: response, name: newFolderName }];
+        this.setState({ folders: newFolder });
+        history.push('/');
       })
       .catch(err => console.log(err.message));
   }
 
   render() {
-    console.log(this.props);
     return (
       <Context.Provider value={{
         folders: this.state.folders,
         notes: this.state.notes,
-        handleDelete: this.handleDelete
+        handleDelete: this.handleDelete,
+        handleNewFolderSubmit: this.handleNewFolderSubmit
       }}>
 
         <div className="App">
@@ -97,6 +126,16 @@ export default class App extends React.Component {
                 exact path='/note/:id'
                 component={ExpandedNote}
               />
+
+              <Route
+                exact path='/AddFolder'
+                component={AddFolder}
+              />
+
+              {/* <Route
+                exact path='/AddNote'
+                component={AddNote}
+              /> */}
             </Switch>
           </div>
         </div>

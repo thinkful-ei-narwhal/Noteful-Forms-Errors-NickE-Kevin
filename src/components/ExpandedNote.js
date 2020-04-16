@@ -7,7 +7,6 @@ export default class ExpandedNote extends React.Component {
     const { notes } = this.context
     console.log(this.context)
     let note = notes.find(note =>
-
       note.id === this.props.match.params.id
     )
 
