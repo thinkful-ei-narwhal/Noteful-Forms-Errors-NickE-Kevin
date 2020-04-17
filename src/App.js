@@ -9,7 +9,7 @@ import Sidebar from './components/constants/Sidebar';
 import Context from './components/constants/userContext';
 import AddFolder from './components/constants/AddFolder';
 import AddNote from './components/constants/AddNote';
-import ErrorPage from './components/constants/ErrorPage';
+import ErrorBoundary from './components/constants/ErrorBoundary';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -101,15 +101,8 @@ export default class App extends React.Component {
       .catch(err => console.log(err.message));
   }
 
-  findFolderId = (folderName) => {
-    const foundFolder = this.state.folders.find(folder => folder.name === folderName);
-    return foundFolder.id;
-  }
-
-  handleNewNoteSubmit = (event, newNoteName, newNoteContent, newNoteFolder, history) => {
-    event.preventDefault();
+  handleNewNoteSubmit = (newNoteName, newNoteContent, newFolderId, history) => {
     const modified = Date.now();
-    const newFolderId = this.findFolderId(newNoteFolder);
     fetch(`http://localhost:9090/notes`,
       {
         method: 'POST',
@@ -157,11 +150,11 @@ export default class App extends React.Component {
       }}>
 
         <div className="App">
-          <ErrorPage>
+          <ErrorBoundary>
             <Header />
-          </ErrorPage>
+          </ErrorBoundary>
           <div className="flex-divide">
-            <ErrorPage>
+            <ErrorBoundary>
               <Sidebar state={this.state} />
               <Switch>
                 <Route
@@ -188,7 +181,7 @@ export default class App extends React.Component {
                   component={AddNote}
                 />
               </Switch>
-            </ErrorPage>
+            </ErrorBoundary>
           </div>
         </div>
 

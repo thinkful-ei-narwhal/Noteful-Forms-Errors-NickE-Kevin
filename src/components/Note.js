@@ -34,8 +34,8 @@ export default class Note extends React.Component {
 }
 
 Note.propTypes = {
-  id: PropTypes.string,
-  title: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
   // modified: not including validation for modified b/c both strings and
   // numbers may be passed down and will still be valid
 };

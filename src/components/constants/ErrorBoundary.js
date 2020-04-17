@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class ErrorPage extends React.Component {
+export default class ErrorBoundary extends React.Component {
   state = { error: null, errorInfo: null };
 
   componentDidCatch(error, errorInfo) {

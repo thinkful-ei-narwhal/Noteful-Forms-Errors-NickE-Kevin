@@ -17,7 +17,7 @@ export default class AddFolder extends React.Component {
       },
       folderName: {
         value: '',
-        touched: '',
+        touched: false,
       }
     };
   }
@@ -34,7 +34,7 @@ export default class AddFolder extends React.Component {
     this.setState({ folderName: { value: value, touched: true } });
   }
 
-  validateNoteName() {
+  validateNoteName = () => {
     const name = this.state.name.value.trim();
     if (name.length === 0) {
       return 'Name is required';
@@ -43,7 +43,7 @@ export default class AddFolder extends React.Component {
     }
   }
 
-  validateNoteCont() {
+  validateNoteCont = () => {
     const content = this.state.content.value.trim();
     if (content.length === 0) {
       return 'Content is required';
@@ -52,50 +52,62 @@ export default class AddFolder extends React.Component {
     }
   }
 
-  validateNoteFolder() {
-    const { folders } = this.context;
+  validateNoteFolder = () => {
     const folderName = this.state.folderName.value.trim();
-    if (folderName.length === 0) {
+    if (!folderName) {
       return 'Folder name is required';
-    } else if (folderName.length < 3) {
-      return 'Folder name must be at least 3 characters long';
-    } else if ((folders.find(folder => folder.name === folderName)) === undefined) {
-      return 'Folder name must reference an actual folder'
     }
   }
 
+  handleSubmitValidation = (e) => {
+    e.preventDefault();
+    if (this.validateNoteName() || this.validateNoteCont() || this.validateNoteFolder()) {
+      this.setState({
+        name: {
+          value: this.state.name.value,
+          touched: true
+        },
+        content: {
+          value: this.state.content.value,
+          touched: true
+        },
+        folderName: {
+          value: this.state.folderName.value,
+          touched: true
+        }
+      });
+      return;
+    }
+    this.context.handleNewNoteSubmit(this.state.name.value, this.state.content.value, this.state.folderName.value, this.props.history);
+  }
+
   render() {
-    const { handleNewNoteSubmit, folders } = this.context;
+    const { folders } = this.context;
     const nameError = this.validateNoteName();
     const contError = this.validateNoteCont();
     const folderError = this.validateNoteFolder();
-    try {
-      return (
-        <div>
-          <h2>Add Note</h2>
-          <form onSubmit={(e) =>
-            handleNewNoteSubmit(e, this.state.name.value, this.state.content.value, this.state.folderName.value, this.props.history)}>
-            <label htmlFor="noteName">Note Name</label>
-            <input type="text" onChange={e => this.updateNoteName(e.target.value)} name="noteName" />
-            {this.state.name.touched && <ValidationError message={nameError} />}
-
-            <label htmlFor="noteFolder">Folder Name</label>
-            <select name="noteFolder" onChange={e => this.updateNoteFolder(e.target.value)} >
-              {folders.map(folder => <option value={`${folder.name}`}>{`${folder.name}`}</option>)}
-            </select>
-            {this.state.folderName.touched && <ValidationError message={folderError} />}
-
-            <label htmlFor="noteContent">Note Content</label>
-            <input type="text" onChange={e => this.updateNoteCont(e.target.value)} name="noteContent" />
-            {this.state.content.touched && <ValidationError message={contError} />}
-
-            <button type='submit' disabled={this.validateNoteName() || this.validateNoteCont()}>Add Note</button>
-          </form>
-        </div>
-      );
-    }
-    catch {
-      throw new Error('Failed to add note');
-    }
+    return (
+      <div>
+        <h2>Add Note</h2>
+        <form onSubmit={this.handleSubmitValidation}>
+          <label htmlFor="noteName">Note Name</label>
+          <input type="text" onChange={e => this.updateNoteName(e.target.value)} name="noteName" />
+          {this.state.name.touched && <ValidationError message={nameError} />}
+          <br />
+          <label htmlFor="noteFolder">Folder Name</label>
+          <select name="noteFolder" onChange={e => this.updateNoteFolder(e.target.value)} >
+            <option>Select a folder</option>
+            {folders.map(folder => <option key={folder.id} value={folder.id}>{folder.name}</option>)}
+          </select>
+          {this.state.folderName.touched && <ValidationError message={folderError} />}
+          <br />
+          <label htmlFor="noteContent">Note Content</label>
+          <input type="text" onChange={e => this.updateNoteCont(e.target.value)} name="noteContent" />
+          {this.state.content.touched && <ValidationError message={contError} />}
+          <br />
+          <button type='submit' >Add Note</button>
+        </form>
+      </div>
+    );
   }
 }
