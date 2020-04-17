@@ -94,7 +94,7 @@ export default class App extends React.Component {
         }
       })
       .then(response => {
-        const newFolder = [...this.state.folders, { id: response, name: newFolderName }];
+        const newFolder = [...this.state.folders, { id: response.id, name: newFolderName }];
         this.setState({ folders: newFolder });
         history.push('/');
       })
